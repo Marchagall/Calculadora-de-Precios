@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Precio de Fotos</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .calculator {
+    width: 700px; /* Adjust the width to your desired size */
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    text-align: center;
+	margin: auto;
+  }
+  .title {
+    text-align: center;
+	font-size: 20px;
+  }
+  .size {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+	font-size: 20px;
+  }
+  .quantity-container {
+    justify-content: right;
+    align-items: center;
+    text-align: right;
+  }
+  .quantity-button {
+    width: 40px;
+    height: 40px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .quantity-input {
+    width: 50px;
+    padding: 12px;
+    margin: 0 4px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  .total-price-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 20px;
+  }
+  .total-price-label {
+    font-size: 30px; /* Adjusted font size */
+    margin-right: 10px;
+  }
+  .total-price-value {
+    font-size: 30px; /* Adjusted font size */
+    text-align: right;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    left: 0;
+}
+.total-per-size {
+    font-size: 30px;
+    color: black;
+    width: 10%;
+    text-align: center;
+    margin-bottom: 5px;
+}
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .button-container button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .button-container button:hover {
+    background-color: #45a049;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+  }
+  .modal-content {
+    background-color: #fefefe;
+    margin: 20% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-sizing: border-box;
+  }
+  .modal-content h2 {
+    margin-top: 0;
+  }
+  .modal-content ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  .modal-content ul li {
+    margin-bottom: 10px;
+  }
+  .modal-content button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .modal-content button:hover {
+    background-color: #45a049;
+  }
+  hr {
+    border: 1px solid;
+    margin: 2px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="calculator">
+  <h2 class="title">Calculadora de Precio de Fotos</h2>
+  <div class="button-container">
+    <button onclick="openSettings()">Configuración</button>
+    <button onclick="resetInputs()">Reset</button>
+  </div>
+  <hr>
+  <div id="sizes">
+    <!-- Sizes and quantities -->
+    <!-- Generated dynamically -->
+  </div>
+  <hr>
+  <div class="total-price-container">
+    <label for="totalPrice" class="total-price-label">Total:</label>
+    <span id="totalPrice" class="total-price-value">$0</span>
+    <span id="interestLabel" style="display:none;">&nbsp;(con interés)</span></span>&nbsp;<span>|</span>
+    <input type="checkbox" id="applyInterest" onchange="calculateTotal()">
+    <label for="applyInterest">Precio Tarjeta hasta 3 cuotas</label>
+  </div>
+
+  <!-- Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <h2>Configuración de Precio</h2>
+      <ul id="priceInputs">
+        <!-- Prices input -->
+        <!-- Generated dynamically -->
+      </ul>
+      <button onclick="updatePrices()">Actualizar Precios</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var sizes = [
+    { size: "4cm x 4cm Normal", price: 1200 },
+    { size: "4cm x 4cm Express", price: 1500 },
+    { size: "Visa/Pasaporte", price: 4900 },
+    { size: "9cm x 13cm", price: 400 },
+    { size: "10cm x 15cm", price: 450 },
+    { size: "13cm x 18cm", price: 550 },
+    { size: "15cm x 21cm", price: 600 },
+    { size: "20cm x 30cm", price: 1900 },
+    { size: "30cm x 40cm", price: 3000 },
+    { size: "Digitalizado", price: 600 },
+    { size: "Hora de Arte", price: 3000 },
+    { size: "Revelado", price: 10000 }
+  ];
+
+  var sizesContainer = document.getElementById('sizes');
+  sizes.forEach(function(size, index) {
+    var sizeElement = document.createElement('div');
+    sizeElement.classList.add('size');
+    sizeElement.innerHTML = `
+	  <span class="total-per-size" id="totalPerSize${index + 1}">$0</span>
+      <label for="size${index + 1}">${size.size} - $${formatPrice(size.price)}</label>
+	  <div class="quantity-container">
+        <button class="quantity-button decrement" onclick="decrementQuantity(${index + 1})">-</button>
+        <input type="text" id="quantity${index + 1}" class="quantity-input" value="0" onkeypress="handleKeyPress(event, ${index + 1})" onfocus="if(this.value === '0') this.value = ''" onblur="if(this.value === '') this.value = '0'">
+        <button class="quantity-button increment" onclick="incrementQuantity(${index + 1})">+</button>
+      </div>
+      
+    `;
+    sizesContainer.appendChild(sizeElement);
+    // Add HR line after each size element
+    if (index < sizes.length - 1) {
+      sizesContainer.appendChild(document.createElement('hr'));
+    }
+  });
+
+  var defaultPrices = sizes.map(function(size) {
+    return size.price;
+  });
+  var customPrices = defaultPrices.slice();
+
+  var interestCheckbox = document.getElementById("applyInterest");
+  interestCheckbox.addEventListener("change", function() {
+    calculateTotal();
+    updateTotalPriceWithInterest();
+  });
+
+  var settingsModalContent = document.getElementById('priceInputs');
+  sizes.forEach(function(size, index) {
+    var priceInputElement = document.createElement('li');
+    priceInputElement.innerHTML = `
+      ${size.size}: $<input type="number" id="priceInput${index + 1}" value="${formatPrice(size.price)}">
+    `;
+    settingsModalContent.appendChild(priceInputElement);
+  });
+
+  function incrementQuantity(index) {
+    var input = document.getElementById("quantity" + index);
+    var value = parseInt(input.value || 0);
+    input.value = value + 1;
+    calculateTotal();
+    calculateTotalPerSize(index);
+  }
+
+  function decrementQuantity(index) {
+    var input = document.getElementById("quantity" + index);
+    var value = parseInt(input.value || 0);
+    if (value > 0) {
+      input.value = value - 1;
+      calculateTotal();
+      calculateTotalPerSize(index);
+    }
+  }
+
+  function handleKeyPress(event, index) {
+    if (event.keyCode === 13) {
+      var input = document.getElementById("quantity" + index);
+      var value = parseInt(input.value || 0);
+      if (value < 0) {
+        input.value = 0;
+      }
+      calculateTotal();
+      calculateTotalPerSize(index);
+    }
+  }
+
+  function calculateTotal() {
+    var total = 0;
+    for (var i = 0; i < sizes.length; i++) {
+      var quantity = parseInt(document.getElementById("quantity" + (i + 1)).value || 0);
+      var price = interestCheckbox.checked ? customPrices[i] * 1.25 : customPrices[i];
+      total += quantity * price;
+    }
+    document.getElementById("totalPrice").textContent = "$" + formatPrice(total);
+    var interestLabel = document.getElementById("interestLabel");
+    interestLabel.style.display = interestCheckbox.checked ? "inline" : "none";
+  }
+
+  function calculateTotalPerSize(index) {
+    var quantity = parseInt(document.getElementById("quantity" + index).value || 0);
+    var price = interestCheckbox.checked ? customPrices[index - 1] * 1.25 : customPrices[index - 1];
+    var totalPerSize = quantity * price;
+    document.getElementById("totalPerSize" + index).textContent = "$" + formatPrice(totalPerSize);
+  }
+
+  function openSettings() {
+    var modal = document.getElementById('settingsModal');
+    modal.style.display = "block";
+  }
+
+  function updatePrices() {
+    for (var i = 0; i < sizes.length; i++) {
+      var newPrice = parseInt(document.getElementById("priceInput" + (i + 1)).value.replace(/\./g, '') || 0);
+      customPrices[i] = newPrice;
+      // Update price labels
+      document.querySelector(`[for="size${i + 1}"]`).textContent = `${sizes[i].size} - $${formatPrice(newPrice)}`;
+    }
+    calculateTotal();
+  }
+
+  function updateTotalPriceWithInterest() {
+    calculateTotal();
+  }
+
+  function resetInputs() {
+  var inputs = document.querySelectorAll('.quantity-input');
+  inputs.forEach(function(input) {
+    input.value = 0;
+  });
+
+  // Reset total per size elements
+  var totalPerSizeElements = document.querySelectorAll('.total-per-size');
+  totalPerSizeElements.forEach(function(element) {
+    element.textContent = "$0";
+  });
+
+  // Reset checkbox
+  var interestCheckbox = document.getElementById("applyInterest");
+  interestCheckbox.checked = false;
+
+  calculateTotal();
+}
+
+  // Format price with dot as thousands separator
+  function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  // Close the modal when clicking outside of it
+  window.onclick = function(event) {
+    var modal = document.getElementById('settingsModal');
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+
+</body>
+</html>
