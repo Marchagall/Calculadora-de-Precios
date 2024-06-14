@@ -151,6 +151,7 @@
   <h1 class="title">Marc Chagall - Calculadora de Precio de Fotos</h1>
   <div class="button-container">
     <button onclick="openSettings()">Configuración</button>
+	  <span>Precio de Lista</span>
     <button onclick="resetInputs()">Reset</button>
   </div>
   <hr>
@@ -162,9 +163,9 @@
   <div class="total-price-container">
     <label for="totalPrice" class="total-price-label">Total:</label>
     <span id="totalPrice" class="total-price-value">$0</span>
-    <span id="interestLabel" style="display:none;">&nbsp;(con interés)</span></span>&nbsp;<span>|</span>
+    <span id="interestLabel" style="display:none;">&nbsp;(con descuento)</span></span>&nbsp;<span>|</span>
     <input type="checkbox" id="applyInterest" onchange="calculateTotal()">
-    <label for="applyInterest">Precio Tarjeta hasta 3 cuotas</label>
+    <label for="applyInterest">Contado Efectivo</label>
   </div>
 
   <!-- Modal -->
@@ -271,7 +272,7 @@
     var total = 0;
     for (var i = 0; i < sizes.length; i++) {
       var quantity = parseInt(document.getElementById("quantity" + (i + 1)).value || 0);
-      var price = interestCheckbox.checked ? customPrices[i] * 1.25 : customPrices[i];
+      var price = interestCheckbox.checked ? customPrices[i] / 1.25 : customPrices[i];
       total += quantity * price;
     }
     document.getElementById("totalPrice").textContent = "$" + formatPrice(total);
