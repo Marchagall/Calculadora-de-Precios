@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Precios</title>
+<title>Calculadora de Precio de Fotos</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -74,7 +74,7 @@
     position: fixed;
     left: 0;
 }
-.total-per-size {
+  .total-per-size {
     font-size: 30px;
     color: black;
     width: 10%;
@@ -83,7 +83,7 @@
 }
   .button-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
     margin-bottom: 10px;
   }
   .button-container button {
@@ -94,51 +94,6 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  .button-container button:hover {
-    background-color: #45a049;
-  }
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-  }
-  .modal-content {
-    background-color: #fefefe;
-    margin: 20% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    box-sizing: border-box;
-  }
-  .modal-content h2 {
-    margin-top: 0;
-  }
-  .modal-content ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  .modal-content ul li {
-    margin-bottom: 10px;
-  }
-  .modal-content button {
-    padding: 8px 16px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .modal-content button:hover {
-    background-color: #45a049;
-  }
   hr {
     border: 1px solid;
     margin: 2px 0;
@@ -148,9 +103,8 @@
 <body>
 
 <div class="calculator">
-  <h2 class="title">Marc Chagall Fotos - Calculadora de Precios</h2>
+  <h2 class="title">Calculadora de Precio de Fotos</h2>
   <div class="button-container">
-    <button onclick="openSettings()">Configuración</button>
     <button onclick="resetInputs()">Reset</button>
   </div>
   <hr>
@@ -167,23 +121,10 @@
     <label for="applyInterest">Precio Tarjeta hasta 3 cuotas</label>
   </div>
 
-  <!-- Modal -->
-  <div id="settingsModal" class="modal">
-    <div class="modal-content">
-      <h2>Configuración de Precio</h2>
-      <ul id="priceInputs">
-        <!-- Prices input -->
-        <!-- Generated dynamically -->
-      </ul>
-      <button onclick="updatePrices()">Actualizar Precios</button>
-    </div>
-  </div>
-</div>
-
-<script>
+  <script>
   var sizes = [
-    { size: "4x4 Normal (40 min)", price: 1200 },
-    { size: "4x4 Express (10 min)", price: 1500 },
+    { size: "4cm x 4cm Normal", price: 1200 },
+    { size: "4cm x 4cm Express", price: 1500 },
     { size: "Visa/Pasaporte", price: 4900 },
     { size: "9cm x 13cm", price: 400 },
     { size: "10cm x 15cm", price: 450 },
@@ -226,15 +167,6 @@
   interestCheckbox.addEventListener("change", function() {
     calculateTotal();
     updateTotalPriceWithInterest();
-  });
-
-  var settingsModalContent = document.getElementById('priceInputs');
-  sizes.forEach(function(size, index) {
-    var priceInputElement = document.createElement('li');
-    priceInputElement.innerHTML = `
-      ${size.size}: $<input type="number" id="priceInput${index + 1}" value="${formatPrice(size.price)}">
-    `;
-    settingsModalContent.appendChild(priceInputElement);
   });
 
   function incrementQuantity(index) {
@@ -286,11 +218,6 @@
     document.getElementById("totalPerSize" + index).textContent = "$" + formatPrice(totalPerSize);
   }
 
-  function openSettings() {
-    var modal = document.getElementById('settingsModal');
-    modal.style.display = "block";
-  }
-
   function updatePrices() {
     for (var i = 0; i < sizes.length; i++) {
       var newPrice = parseInt(document.getElementById("priceInput" + (i + 1)).value.replace(/\./g, '') || 0);
@@ -327,14 +254,6 @@
   // Format price with dot as thousands separator
   function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
-
-  // Close the modal when clicking outside of it
-  window.onclick = function(event) {
-    var modal = document.getElementById('settingsModal');
-    if (event.target === modal) {
-      modal.style.display = "none";
-    }
   }
 </script>
 
