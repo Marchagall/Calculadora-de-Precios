@@ -23,6 +23,13 @@
     text-align: center;
     margin: auto;
   }
+  .Whatsapp {
+    max-width: 400px;
+	max-height: 150px;
+    text-align: center;
+	align-items: center;
+    padding: 5px;
+  }
   .title {
     margin-top: 0;
     text-align: center;
@@ -111,7 +118,7 @@
 <div class="calculator">
   <h1 class="title">- Marc Chagall Fotos -<br>Calculadora de Precios</h1>
   <div class="button-container">
-    <label>Precio Contado Efectivo, Debito o Transferencia (alias: marchagal)</label>
+    <label>El mismo precio en: Contado Efectivo, Debito<br>o Transferencia (alias: marchagal)</label>
     <button onclick="resetInputs()">Reset</button>
   </div>
   <hr>
@@ -128,10 +135,15 @@
     <label for="applyInterest">Plan Simple 3</label>
   </div>
 
+<div class="Whatsapp">
+<div class="button-container">
+  <label>Agenda nuestro numero y manda tus fotos, pero no te olvides de<br>indicar en que tamaño las queres.</label>
+    <button onclick="window.location.href = 'https://wa.me/+5493874508641';">Marc Chagall Fotos</button>
+</div>
+</div>
+
   <script>
   var sizes = [
-    { size: "4x4 (40 min)", price: 1200 },
-    { size: "4x4 (10 min)", price: 1500 },
     { size: "Visa/Pasaporte", price: 4900 },
     { size: "9cm x 13cm", price: 400 },
     { size: "10cm x 15cm", price: 450 },
