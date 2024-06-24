@@ -136,7 +136,7 @@
   <div class="Whatsapp">
   <div class="button-container">
     <label>Manda tus fotos aquí, decinos en que tamaño<br>las queres y paga por transferencia.</label>
-    <button onclick="window.location.href = 'https://wa.me/+5493874508641';">Marc Chagall Fotos</button>
+    <button onclick="openWhatsApp()">Marc Chagall Fotos</button>
   </div>
 </div>
 
@@ -266,6 +266,12 @@ function resetInputs() {
   interestCheckbox.checked = false;
 
   calculateTotal();
+}
+  function openWhatsApp() {
+  // Replace the phone number with your WhatsApp number
+  var phoneNumber = '+5493874508641';
+  // Use the WhatsApp URI scheme
+  window.location.href = 'whatsapp://send?phone=' + phoneNumber;
 }
 
 // Format price with dot as thousands separator
