@@ -90,12 +90,20 @@
     position: fixed;
     left: 0;
   }
-  .button-container {
+  .button-container1 {
     display: flex;	  
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px; /* Adjusted margin for better spacing */
-    font-size: 15px;
+    font-size: 20px;
+	text-align: justify-content;
+  }
+  .button-container2 {
+    display: flex;	  
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Adjusted margin for better spacing */
+    font-size: 30px;
 	text-align: justify-content;
   }
   .button-container button {
@@ -114,7 +122,7 @@
 	
   }
   .arrow {
-    font-size: 20px; /* Adjust the font size as needed */
+    font-size: 60px; /* Adjust the font size as needed */
     font-weight: bold; /* Make the arrow bold */
   }
 </style>
@@ -123,8 +131,8 @@
 
 <div class="calculator">
   <h1 class="title">- Marc Chagall Fotos -<br>Calculadora de Precios</h1>
-  <div class="button-container">
-    <label>Mismo precio en: Contado, Debito<br>o Transferencia (alias: marchagal)</label>
+  <div class="button-container1">
+    <label>Precio en Contado, Debito o Transferencia (alias: marchagal)</label>
     <button onclick="resetInputs()">Reset</button>
   </div>
   <hr>
@@ -138,11 +146,11 @@
     <span id="totalPrice" class="total-price-value">$0</span>
     <span id="interestLabel" style="display:none;"></span>&nbsp;<span>|</span>
     <input type="checkbox" id="applyInterest" onchange="calculateTotal()">
-    <label for="applyInterest">Plan Simple 3</label>
+    <label for="applyInterest">Precio en 3 Cuotas</label>
   </div>
   <hr>
   <div class="Whatsapp">
-  <div class="button-container">
+  <div class="button-container2">
     <label>¡Manda tus fotos aquí!</label>
 	 <span class="arrow">&rarr;</span>&nbsp;&nbsp;
     <button onclick="openWhatsApp()"><img src="https://static.whatsapp.net/rsrc.php/yZ/r/JvsnINJ2CZv.svg" alt="WhatsApp Logo"><br>Marc Chagall Fotos</button>
@@ -160,7 +168,7 @@ var sizes = [
   { size: "20cm x 30cm", price: 2500 },
   { size: "30cm x 40cm", price: 4500 },
   { size: "Digitalizado", price: 700 },
-  { size: "Revelado", price: 20000 }
+  { size: "Revelado de Rollo", price: 20000 }
 ];
 
 var sizesContainer = document.getElementById('sizes');
@@ -227,7 +235,7 @@ function calculateTotal() {
   var total = 0;
   for (var i = 0; i < sizes.length; i++) {
     var quantity = parseInt(document.getElementById("quantity" + (i + 1)).value || 0);
-    var price = interestCheckbox.checked ? customPrices[i] * 1.25 : customPrices[i];
+    var price = interestCheckbox.checked ? customPrices[i] * 1.15 : customPrices[i];
     total += quantity * price;
   }
   document.getElementById("totalPrice").textContent = "$" + formatPrice(total);
@@ -237,7 +245,7 @@ function calculateTotal() {
 
 function calculateTotalPerSize(index) {
   var quantity = parseInt(document.getElementById("quantity" + index).value || 0);
-  var price = interestCheckbox.checked ? customPrices[index - 1] * 1.25 : customPrices[index - 1];
+  var price = interestCheckbox.checked ? customPrices[index - 1] * 1.15 : customPrices[index - 1];
   var totalPerSize = quantity * price;
   document.getElementById("totalPerSize" + index).textContent = "$" + formatPrice(totalPerSize);
 }
